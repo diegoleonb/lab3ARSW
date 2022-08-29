@@ -70,6 +70,20 @@ Sincronización y Dead-Locks.
 
 2. Revise el código e identifique cómo se implemento la funcionalidad antes indicada. Dada la intención del juego, un invariante debería ser que la sumatoria de los puntos de vida de todos los jugadores siempre sea el mismo(claro está, en un instante de tiempo en el que no esté en proceso una operación de incremento/reducción de tiempo). Para este caso, para N jugadores, cual debería ser este valor?.
 
+Se crea un boton Start en la clase ControlFrame en donde al ser pulsado va a inicializar la creacion de los inmortales dependiendo del numero de inmortales que haya indicado el usuario. Una vez creada la lista de inmortales se hace la verificacion de que no sea nula la lista y se da comienzo a cada hilo.
+
+![](./img/media/Capture9.PNG)
+
+En la misma clase se crea la lista de inmortales en donde recibe el numero de inmortales indicado por el usuario y comienza la creacion de cada objeto de tipo Inmortal enviando sus respectivos atributos teniendo que la vida y el daño es un valor fijo (La vida es cambiante una vez se corre el programa mientras que el daño no cambia).
+
+![](./img/media/Capture10.PNG)
+
+En la clase inmortal se va a dar la pelea entre inmortales sin antes verificar que un inmortal no puede pelearse contra el mismo. Al generarse la pelea entre dos inmortales se le va a restar vida a uno mientras que al otro se le suma.
+
+![](./img/media/Capture11.PNG)
+
+Para N jugadores debe haber N * 100 de vida
+
 3. Ejecute la aplicación y verifique cómo funcionan las opción ‘pause and check’. Se cumple el invariante?.
 
 4. Una primera hipótesis para que se presente la condición de carrera para dicha función (pause and check), es que el programa consulta la lista cuyos valores va a imprimir, a la vez que otros hilos modifican sus valores. Para corregir esto, haga lo que sea necesario para que efectivamente, antes de imprimir los resultados actuales, se pausen todos los demás hilos. Adicionalmente, implemente la opción ‘resume’.
