@@ -34,7 +34,7 @@ Para garantizar que el productor produzca mas rapido de lo que el consumidor con
 
 Para que no se generen errores al superarse el limite del API de la coleccion vamos a ponerle limite al stock que puede producir la clase Producer.
 
-![](./img/media/Capture6.PNG)
+![](./img/media/Captura6.PNG)
 
 Se puede apreciar que el consumo de CPU es menos del 0,1% siendo excaso el consumo.
 
@@ -86,9 +86,36 @@ Para N jugadores debe haber N * 100 de vida
 
 3. Ejecute la aplicación y verifique cómo funcionan las opción ‘pause and check’. Se cumple el invariante?.
 
+No se cumple el invariante debido a que en este caso al ser 5 Inmortals y teniendo en cuenta que la ecuacion es N * 100 tendria que ser la vida 500.
+
+![](./img/media/Capture12.PNG)
+
 4. Una primera hipótesis para que se presente la condición de carrera para dicha función (pause and check), es que el programa consulta la lista cuyos valores va a imprimir, a la vez que otros hilos modifican sus valores. Para corregir esto, haga lo que sea necesario para que efectivamente, antes de imprimir los resultados actuales, se pausen todos los demás hilos. Adicionalmente, implemente la opción ‘resume’.
 
+Modificamos el boton "Pause and Check" haciendo uso de synchronized para sincronizar los hilos y que al momento de darle al boton nuestros hilos sean pausados. Asimimos, sincronizamos im.getHealth() para garantizar que no se modifique mientras queremos consultar el valor para imprimir. Para este caso cambiamos el tipo de variable de sum de int a AtomicInteger debido a  que este tipo de variable nos permite realizar operaciones en un contexto multihilo sin la necesidad de usar syncronized. 
+
+![](./img/media/Capture13.PNG)
+
+En nuestra clase Inmortal vamos a modificar el run haciendo uso de synchronized para sincronizar nuestra lista de inmortals. Ademas, vamos a hacer la condicion que si la bandera paused esta verdadera entonces pausamos el hilo.
+
+![](./img/media/Capture14.PNG)
+
+Para terminar modificamos el metodo fight de la misma clase para sincronizar la salud de cada objeto de tipo Inmortal por lo que a su vez sincronizamos nuestra lista de inmortals. (Como hacemos uso del tipo AtomicInteger la manera en la que se suma y resta cambia por lo que hay que recurrir a metodos de la clase del mismo)
+
+![](./img/media/Capture15.PNG)
+
+Para la implementaciond el boton resume vamos a sincronizar nuestros hilos y a cada uno le cambiamos el valor de la bandera paused a falso. Dichon cambio lo hacemos en la clase Inmortal en el metodo resumee(). Por ultimo le notificamos a todos los hilos para que siga su funcionamiento.
+
+![](./img/media/Capture16.PNG)
+
 5. Verifique nuevamente el funcionamiento (haga clic muchas veces en el botón). Se cumple o no el invariante?.
+
+Si se cumple el invariante N *100 que para este caso es (5 * 100)
+
+![](./img/media/Capture17.PNG)
+
+![](./img/media/Capture18.PNG)
+
 
 6. Identifique posibles regiones críticas en lo que respecta a la pelea de los inmortales. Implemente una estrategia de bloqueo que evite las condiciones de carrera. Recuerde que si usted requiere usar dos o más ‘locks’ simultáneamente, puede usar bloques sincronizados anidados:
 
