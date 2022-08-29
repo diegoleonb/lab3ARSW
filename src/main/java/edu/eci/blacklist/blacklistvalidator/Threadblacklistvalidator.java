@@ -3,17 +3,19 @@ import edu.eci.blacklist.spamkeywordsdatasource.HostBlacklistsDataSourceFacade;
 import java.util.LinkedList;
 
 public class Threadblacklistvalidator extends Thread{
-    private int checkedListsCount =0,ocurrencesCount =0,a,b;
+    private int checkedListsCount,a,b;
+    private static int ocurrencesCount;
+    private static Integer countBlacks = 0;
     private String ipaddress;
     private HostBlacklistsDataSourceFacade skds;
     private LinkedList<Integer> blackListOcurrences = new LinkedList<>();
 
     /**
-     * Constructor of Threadblacklistvalidator
-     * @param ipaddress
-     * @param a
-     * @param b
-     * @param skds
+     * Constructor de Threadblacklistvalidator
+     * @param ipaddress ipaddress
+     * @param a minimo
+     * @param b maximo
+     * @param skds Clase HostBlacklistsDataSourceFacade para la verificacion en las listas negras
      */
     public Threadblacklistvalidator(String ipaddress, int a, int b, HostBlacklistsDataSourceFacade skds){
         this.ipaddress = ipaddress;
@@ -21,6 +23,10 @@ public class Threadblacklistvalidator extends Thread{
         this.b = b;
         this.skds = skds;
     }
+
+    /**
+     * Getters y Setters de los atributos de la clase Threadblacklistvalidator
+     */
 
     public int getCheckedListsCount() {
         return this.checkedListsCount;
@@ -31,11 +37,7 @@ public class Threadblacklistvalidator extends Thread{
     }
 
     public int getOcurrencesCount() {
-        return this.ocurrencesCount;
-    }
-
-    public void setOcurrencesCount(int ocurrencesCount) {
-        this.ocurrencesCount = ocurrencesCount;
+        return ocurrencesCount;
     }
 
     public int getA() {
@@ -78,18 +80,29 @@ public class Threadblacklistvalidator extends Thread{
         this.blackListOcurrences = blackListOcurrences;
     }
     
+    /**
+     * Funcion que se encarga de la verificacion de si una Ipaddress esta en la lista negra
+     */
     public void run(){
-        for(int i=a;i<b;i++){
-            checkedListsCount++;
-            if(skds.isInBlackListServer(i, ipaddress)){
-                blackListOcurrences.add(i);
-                ocurrencesCount++;
-
+        synchronized(blackListOcurrences){
+            synchronized(countBlacks){
+                for(int i=a;i<=b;i++){
+                    checkedListsCount++;
+                    if(skds.isInBlackListServer(i, ipaddress)){
+                        blackListOcurrences.add(i);
+                        ocurrencesCount++;
+                        countBlacks =+ 1;
+                    }
+                }
+                try {
+                    if(countBlacks == HostBlackListsValidator.getBlackListAlarmCount()){
+                        blackListOcurrences.wait();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
         }
     }
-    
-
-
-    
 }
