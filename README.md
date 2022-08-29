@@ -47,6 +47,14 @@ Teniendo en cuenta los conceptos vistos de condición de carrera y sincronizaci�
 - La búsqueda distribuida se detenga (deje de buscar en las listas negras restantes) y retorne la respuesta apenas, en su conjunto, los hilos hayan detectado el número de ocurrencias requerido que determina si un host es confiable o no (_BLACK_LIST_ALARM_COUNT_).
 - Lo anterior, garantizando que no se den condiciones de carrera.
 
+Para garantizar que se cumpla que se detenga las busquedas se hace uso de synchronized para que al momento de que se verifique que la ip esta en una lista negra deje de buscar en las demas sino retorne "As Not Trustworthy" y detenga los demas hilos.
+
+![](./img/media/Capture7.PNG)
+
+Asimismo, sobreescribimos el metodo checkHost para recibir ademas del parametro ipaddress el de numero de hilos para la creacion de los mismos. En donde hacemos que se detengan los hilos una vez se haya encontrado que la ip es "As Not Trustworthy"
+
+![](./img/media/Capture8.PNG)
+
 ##### Parte III. – Avance para el martes, antes de clase.
 
 Sincronización y Dead-Locks.
