@@ -100,9 +100,6 @@ En nuestra clase Inmortal vamos a modificar el run haciendo uso de synchronized 
 
 ![](./img/media/Captura14.PNG)
 
-Para terminar modificamos el metodo fight de la misma clase para sincronizar la salud de cada objeto de tipo Inmortal por lo que a su vez sincronizamos nuestra lista de inmortals. (Como hacemos uso del tipo AtomicInteger la manera en la que se suma y resta cambia por lo que hay que recurrir a metodos de la clase del mismo)
-
-![](./img/media/Captura15.PNG)
 
 Para la implementaciond el boton resume vamos a sincronizar nuestros hilos y a cada uno le cambiamos el valor de la bandera paused a falso. Dichon cambio lo hacemos en la clase Inmortal en el metodo resumee(). Por ultimo le notificamos a todos los hilos para que siga su funcionamiento.
 
@@ -110,11 +107,9 @@ Para la implementaciond el boton resume vamos a sincronizar nuestros hilos y a c
 
 5. Verifique nuevamente el funcionamiento (haga clic muchas veces en el botón). Se cumple o no el invariante?.
 
-Si se cumple el invariante N *100 que para este caso es (5 * 100)
+Todavia no se cumple el invariante (N * 100)
 
-![](./img/media/Captura17.PNG)
-
-![](./img/media/Captura18.PNG)
+![](./img/media/Captura19.PNG)
 
 
 6. Identifique posibles regiones críticas en lo que respecta a la pelea de los inmortales. Implemente una estrategia de bloqueo que evite las condiciones de carrera. Recuerde que si usted requiere usar dos o más ‘locks’ simultáneamente, puede usar bloques sincronizados anidados:
@@ -127,11 +122,33 @@ Si se cumple el invariante N *100 que para este caso es (5 * 100)
 	}
 	```
 
+Modificamos el metodo fight de la clase Inmortal para sincronizar la salud de cada objeto de tipo Inmortal por lo que a su vez sincronizamos nuestra lista de inmortals. (Como hacemos uso del tipo AtomicInteger la manera en la que se suma y resta cambia por lo que hay que recurrir a metodos de la clase del mismo)
+
+![](./img/media/Captura15.PNG)
+
+Si se cumple el invariante N *100 que para este caso es (5 * 100)
+
+![](./img/media/Captura17.PNG)
+
+![](./img/media/Captura18.PNG)
+
 7. Tras implementar su estrategia, ponga a correr su programa, y ponga atención a si éste se llega a detener. Si es así, use los programas jps y jstack para identificar por qué el programa se detuvo.
 
 8. Plantee una estrategia para corregir el problema antes identificado (puede revisar de nuevo las páginas 206 y 207 de _Java Concurrency in Practice_).
 
 9. Una vez corregido el problema, rectifique que el programa siga funcionando de manera consistente cuando se ejecutan 100, 1000 o 10000 inmortales. Si en estos casos grandes se empieza a incumplir de nuevo el invariante, debe analizar lo realizado en el paso 4.
+
+100
+
+![](./img/media/Captura20.PNG)
+
+1000
+
+![](./img/media/Captura21.PNG)
+
+10000
+
+![](./img/media/Captura22.PNG)
 
 10. Un elemento molesto para la simulación es que en cierto punto de la misma hay pocos 'inmortales' vivos realizando peleas fallidas con 'inmortales' ya muertos. Es necesario ir suprimiendo los inmortales muertos de la simulación a medida que van muriendo. Para esto:
 	* Analizando el esquema de funcionamiento de la simulación, esto podría crear una condición de carrera? Implemente la funcionalidad, ejecute la simulación y observe qué problema se presenta cuando hay muchos 'inmortales' en la misma. Escriba sus conclusiones al respecto en el archivo RESPUESTAS.txt.
