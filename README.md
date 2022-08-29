@@ -14,9 +14,31 @@ Control de hilos con wait/notify. Productor/consumidor.
    
 ![](./img/media/Capture1.PNG)
 
+Se puede apreciar un alto consumo de CPU debido a la clase Producer que se encarga de generar los objetos e insertarlos a la lista queue para que el consumidor pueda sacarlos de la misma, el problema se encuentra en que el consumidor no tiene pausa mientras que el productor si de un segundo, asi, el productor necesita suplir la cantidad necesaria de objetos para el consumidor lo que genera un alto consumo de CPU.
+
 2. Haga los ajustes necesarios para que la solución use más eficientemente la CPU, teniendo en cuenta que -por ahora- la producción es lenta y el consumo es rápido. Verifique con JVisualVM que el consumo de CPU se reduzca.
+
+Para solucionar el consumo alto de CPU lo que hacemos es hacer que el consumidor descanse el mismo tiempo que el productor para que sea mas lo que se produce que lo que se consume. Siendo asi se baja el consumo de CPU a un nivel significativo.
+
+![](./img/media/Capture3.PNG)   
+
+Podemos apreciar que se redujo el consumo de CPU notablemente una vez se ha hecho el cambio en la clase Consumer.
+
+![](./img/media/Capture2.PNG)
+
 3. Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), haga que dicho límite se respete. Revise el API de la colección usada como cola para ver cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite pequeño para el 'stock', no haya consumo alto de CPU ni errores.
 
+Para garantizar que el productor produzca mas rapido de lo que el consumidor consume vamos a modificar el tiempo en el que el hilo descansa disminuyendo su valor y aumentando el del consumidor. Asimismo, hacemos uso de syncroniced para que en el momento que el productor haya producido el limite que tiene entonces sincronice los hilos para parar la insercion de objetos en queue haciendo uso de wait() para garantizar lo mencionado.
+
+![](./img/media/Capture5.PNG)
+
+Para que no se generen errores al superarse el limite del API de la coleccion vamos a ponerle limite al stock que puede producir la clase Producer.
+
+![](./img/media/Capture6.PNG)
+
+Se puede apreciar que el consumo de CPU es menos del 0,1% siendo excaso el consumo.
+
+![](./img/media/Capture4.PNG)
 
 ##### Parte II. – Antes de terminar la clase.
 
