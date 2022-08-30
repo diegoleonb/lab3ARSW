@@ -154,7 +154,17 @@ Si se cumple el invariante N *100 que para este caso es (5 * 100)
 	* Analizando el esquema de funcionamiento de la simulación, esto podría crear una condición de carrera? Implemente la funcionalidad, ejecute la simulación y observe qué problema se presenta cuando hay muchos 'inmortales' en la misma. Escriba sus conclusiones al respecto en el archivo RESPUESTAS.txt.
 	* Corrija el problema anterior __SIN hacer uso de sincronización__, pues volver secuencial el acceso a la lista compartida de inmortales haría extremadamente lenta la simulación.
 
+Para corregir que se sigan enfrentando inmortales vivos contra muertos vamos a hacer un condicional en el run() de nuestra clase Inmortal. Por lo que se enfrentaran solo inmortals vivos contra vivos. 
+
+![](./img/media/Captura23.PNG)
+
+Para garantizar que se cumpla esa condicion modificamos el metodo changeHealth() agregando la condicion que cuando la vida sea igual a 0 entonces cambiamos su estado a muerto.
+
+![](./img/media/Captura24.PNG)
+
 11. Para finalizar, implemente la opción STOP.
+
+![](./img/media/Captura25.PNG)
 
 <!--
 ### Criterios de evaluación

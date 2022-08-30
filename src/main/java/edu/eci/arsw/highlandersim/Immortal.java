@@ -20,6 +20,8 @@ public class Immortal extends Thread {
 
     private boolean paused = false;
 
+    private boolean live = true;
+
 
     public Immortal(String name, List<Immortal> immortalsPopulation, AtomicInteger health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
         super(name);
@@ -32,9 +34,8 @@ public class Immortal extends Thread {
 
     public void run() {
 
-        while (true) {
+        while (live) {
             Immortal im;
-
             synchronized(immortalsPopulation){
                 try {
                     if(paused){
@@ -56,8 +57,9 @@ public class Immortal extends Thread {
 
             im = immortalsPopulation.get(nextFighterIndex);
 
-            this.fight(im);
-
+            if(im.getLive()){
+                this.fight(im);
+            }
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
@@ -65,7 +67,7 @@ public class Immortal extends Thread {
             }
 
         }
-
+        
     }
 
     public void pause(){
@@ -76,13 +78,22 @@ public class Immortal extends Thread {
         this.paused = false;
     }
 
+    public void kill(){
+        this.live = false;
+    }
+
+    public boolean getLive(){
+        return this.live;
+    }
+
     public void fight(Immortal i2) {
         synchronized(immortalsPopulation){
             synchronized(i2.getHealth()){
                 if (i2.getHealth().get() > 0) {
+                    updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
                     i2.changeHealth(i2.getHealth().get() - defaultDamageValue);
                     this.health.getAndAdd(defaultDamageValue);
-                    updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
+                    
                 } else {
                     updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
                 }
@@ -92,6 +103,9 @@ public class Immortal extends Thread {
 
     public void changeHealth(int v) {
         health.getAndSet(v);
+        if(health.get() == 0){
+            this.live = false;
+        }
     }
 
     public AtomicInteger getHealth() {
